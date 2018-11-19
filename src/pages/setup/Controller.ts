@@ -134,7 +134,78 @@ class Controller {
         modified: this.modified,
       }));
     }
-    
+  }
+
+  public static async startMeter(component: IComponent) {
+    try {
+      this.loading = true;
+      component.setState(() => ({
+        data: this.data,
+        error: null,
+        loading: this.loading,
+        modified: this.modified,
+      }));
+
+      const resp = await fetch('http://localhost:8080/setup/start', {method: 'POST'});
+      
+      if (!resp.ok) {
+        const err = await resp.json();
+        throw new Error(`${resp.status} ${resp.statusText} ${err.name} ${err.message} ${err.stack}`);
+      }
+      
+      this.loading = false;
+      component.setState(() => ({
+        data: this.data,
+        error: null,
+        loading: this.loading,
+        modified: this.modified,
+      }));
+    }
+    catch (err) {
+      this.loading = false;
+      component.setState(() => ({
+        data: this.data,
+        error: err,
+        loading: this.loading,
+        modified: this.modified,
+      }));
+    }
+  }
+
+  public static async stopMeter(component: IComponent) {
+    try {
+      this.loading = true;
+      component.setState(() => ({
+        data: this.data,
+        error: null,
+        loading: this.loading,
+        modified: this.modified,
+      }));
+
+      const resp = await fetch('http://localhost:8080/setup/stop', {method: 'POST'});
+      
+      if (!resp.ok) {
+        const err = await resp.json();
+        throw new Error(`${resp.status} ${resp.statusText} ${err.name} ${err.message} ${err.stack}`);
+      }
+      
+      this.loading = false;
+      component.setState(() => ({
+        data: this.data,
+        error: null,
+        loading: this.loading,
+        modified: this.modified,
+      }));
+    }
+    catch (err) {
+      this.loading = false;
+      component.setState(() => ({
+        data: this.data,
+        error: err,
+        loading: this.loading,
+        modified: this.modified,
+      }));
+    }
   }
 
   public static handleChange(component: IComponent, key: keyof IData, value: string | number): void {

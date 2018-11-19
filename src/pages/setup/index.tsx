@@ -46,12 +46,20 @@ class SetupPage extends React.PureComponent<any, IState> {
     Controller.applyData(this);
   }
 
+  private onStart = () => {
+    Controller.startMeter(this);
+  }
+
+  private onStop = () => {
+    Controller.stopMeter(this);
+  }
+
   private renderForm = (modified: boolean, loading:boolean, data: IData) => {
     const {userAgent, host, workers, rampUp, requests, utm} = data;
     return <Fade tag='div' key='form'>
               <br/>
-              <Button disabled color="success">Start</Button>{' '}
-              <Button disabled color="secondary">Stop</Button>{' '}
+              <Button disabled={modified || loading} color="success" onClick={this.onStart}>Start</Button>{' '}
+              <Button disabled={modified || loading} color="secondary" onClick={this.onStop}>Stop</Button>{' '}
               <Button disabled={!modified || loading} color="warning" onClick={this.onApply}>Apply</Button>
               <br/><br/>
               <Form
