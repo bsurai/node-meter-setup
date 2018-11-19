@@ -44,6 +44,15 @@ class Controller {
     };
   }
 
+  private static setState(component: IComponent, error: Error = null) {
+    component.setState(() => ({
+      error,
+      data: this.data,
+      loading: this.loading,
+      modified: this.modified,
+    }));
+  }
+
   public static async fetch(component: IComponent): Promise<void> {
     try {
       await delay(1000);
@@ -68,34 +77,17 @@ class Controller {
       this.loading = false;
       this.modified = false;
 
-      component.setState(() => ({
-        data: this.data,
-        error: null,
-        loading: this.loading,
-        modified: this.modified,
-      }));
+      this.setState(component);
     }
     catch (err) {
-      // console.log(err);
-      // this.loading = false;
-      component.setState(() => ({
-        data: this.data,
-        error: err,
-        loading: this.loading,
-        modified: this.modified,
-      }));
+      this.setState(component, err);
     }
   }
 
   public static async applyData(component: IComponent) {
     try {
       this.loading = true;
-      component.setState(() => ({
-        data: this.data,
-        error: null,
-        loading: this.loading,
-        modified: this.modified,
-      }));
+      this.setState(component);
 
       const body: IDataDTO = {
         headers: {'User-Agent': this.data.userAgent},
@@ -118,33 +110,18 @@ class Controller {
       this.loading = false;
       this.modified = false;
 
-      component.setState(() => ({
-        data: this.data,
-        error: null,
-        loading: this.loading,
-        modified: this.modified,
-      }));
+      this.setState(component);
     }
     catch (err) {
       this.loading = false;
-      component.setState(() => ({
-        data: this.data,
-        error: err,
-        loading: this.loading,
-        modified: this.modified,
-      }));
+      this.setState(component, err);
     }
   }
 
   public static async startMeter(component: IComponent) {
     try {
       this.loading = true;
-      component.setState(() => ({
-        data: this.data,
-        error: null,
-        loading: this.loading,
-        modified: this.modified,
-      }));
+      this.setState(component);
 
       const resp = await fetch('http://localhost:8080/setup/start', {method: 'POST'});
       
@@ -154,33 +131,18 @@ class Controller {
       }
       
       this.loading = false;
-      component.setState(() => ({
-        data: this.data,
-        error: null,
-        loading: this.loading,
-        modified: this.modified,
-      }));
+      this.setState(component);
     }
     catch (err) {
       this.loading = false;
-      component.setState(() => ({
-        data: this.data,
-        error: err,
-        loading: this.loading,
-        modified: this.modified,
-      }));
+      this.setState(component, err);
     }
   }
 
   public static async stopMeter(component: IComponent) {
     try {
       this.loading = true;
-      component.setState(() => ({
-        data: this.data,
-        error: null,
-        loading: this.loading,
-        modified: this.modified,
-      }));
+      this.setState(component);
 
       const resp = await fetch('http://localhost:8080/setup/stop', {method: 'POST'});
       
@@ -190,21 +152,11 @@ class Controller {
       }
       
       this.loading = false;
-      component.setState(() => ({
-        data: this.data,
-        error: null,
-        loading: this.loading,
-        modified: this.modified,
-      }));
+      this.setState(component);
     }
     catch (err) {
       this.loading = false;
-      component.setState(() => ({
-        data: this.data,
-        error: err,
-        loading: this.loading,
-        modified: this.modified,
-      }));
+      this.setState(component, err);
     }
   }
 
@@ -216,12 +168,7 @@ class Controller {
 
     const newHash = hash(this.data);
     this.modified = newHash !== this.dataHash;
-    component.setState(() => ({
-      data: this.data,
-      error: null,
-      loading: this.loading,
-      modified: this.modified,
-    }));
+    this.setState(component);
   }
 }
 
